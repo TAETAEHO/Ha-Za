@@ -6,8 +6,9 @@ import { Colors } from '../components/utils/_var';
 const FooterWrapper = styled.div`
   .footer {
     padding: 0.3rem 0.8rem;
-    background-color: ${Colors.darkGray};
+    background-color: ${Colors.black};
     width: 100vw;
+    border-top: 1px solid rgba(200, 200, 200, 0.3);
   }
   .sub-container {
     display: flex;
@@ -15,7 +16,7 @@ const FooterWrapper = styled.div`
   .link-label,
   .link,
   .copyright {
-    color: ${Colors.lightGray};
+    color: ${Colors.mediumGray};
   }
   .link {
     cursor: pointer;
@@ -24,7 +25,7 @@ const FooterWrapper = styled.div`
     padding: 0.2rem 0 0 0.25rem;
     margin-bottom: 0.5rem;
     &:hover {
-      color: ${Colors.lightGreen};
+      color: ${Colors.green};
     }
   }
   .link-label {
@@ -65,6 +66,7 @@ function Footer() {
       repository: 'https://github.com/TTurbo0824'
     }
   ];
+  
   return (
     <FooterWrapper>
       <div className="footer">

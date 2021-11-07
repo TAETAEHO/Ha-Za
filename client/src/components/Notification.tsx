@@ -30,9 +30,8 @@ export const NoticeView = styled.div`
   text-align: center;
   width: 16.5rem;
   height: 9.5rem;
-  background-color: rgb(255, 255, 255);
-  color: ${Colors.darkGray};
-  box-shadow: 10px 10px grey;
+  background-color: ${Colors.black};
+  color: ${Colors.lightGray};
   padding: 0.8rem;
 `;
 
@@ -43,7 +42,7 @@ export const Message = styled.div<InnerScreen>`
 
 export const NoticeButton = styled.button`
   margin-top: 1rem;
-  background-color: ${Colors.lightGreen};
+  background-color: ${Colors.green};
   border: none;
   border-radius: 10px;
   height: 1.7rem;
@@ -58,7 +57,7 @@ export const NoticeButton = styled.button`
 
 export const NoticeClose = styled.button`
   margin-top: 1rem;
-  background-color: ${Colors.lightGreen};
+  background-color: ${Colors.green};
   border: none;
   border-radius: 10px;
   width: 7rem;
@@ -80,20 +79,16 @@ export const CloseIcon = styled.div`
 `;
 
 type NotiProp = {
+  modal: () => void;
   message: string;
   handleMessage: (a: string) => void;
   handleNotice: (a: boolean) => void;
 };
 
-function Notification({ message, handleNotice, handleMessage }: NotiProp) {
+function Notification({ modal, message, handleNotice, handleMessage }: NotiProp) {
   const token = useSelector((state: RootState) => state.user).token;
 
   const withdrawalRequest = () => {
-    handleNotice(true);
-    handleMessage('회원탈퇴가 완료되었습니다.');
-    localStorage.clear();
-
-    /*
     axios
       .delete(process.env.REACT_APP_API_URL + '/withdrawal', {
         headers: {
@@ -108,8 +103,12 @@ function Notification({ message, handleNotice, handleMessage }: NotiProp) {
           handleMessage('회원탈퇴가 완료되었습니다.');
           localStorage.clear();
         }
+      })
+      .catch((error) => {
+        if (error.response.data.message === "You're not logged in") {
+          modal();
+        } else console.log(error.response.data.message);
       });
-      */
   };
 
   return (

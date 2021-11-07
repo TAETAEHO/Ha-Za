@@ -43,8 +43,7 @@ export const HeaderButton = styled.button`
   font-size: 0.85rem;
   font-family: 'Noto Sans KR', sans-serif;
   padding-left: 0.5rem;
-  color: ${Colors.gray};
-
+  color: ${Colors.lightGray};
   &:hover {
     color: ${Colors.green};
   }
@@ -64,40 +63,32 @@ type HeaderProp = {
 function Header({ login, signup, modal, handleMessage, handleNotice }: HeaderProp) {
   const dispatch = useDispatch();
   const isLogin = useSelector((state: RootState) => state.user).token;
-  const isExpired = useSelector((state: RootState) => state.user).isExpired;
+  const token = isLogin;
 
   const handleLogoutRequest = () => {
-    const token = isLogin;
-
-    if (isExpired) {
-      modal();
-    } else {
-      // JUST FOR TESTING PURPOSES
-      dispatch(userLogout());
-      localStorage.clear();
-      handleNotice(true);
-      handleMessage('로그아웃 성공!');
-
-      /*
-      axios
-        .post(process.env.REACT_APP_API_URL + '/logout', {
+    axios
+      .post(
+        process.env.REACT_APP_API_URL + '/logout',
+        { data: null },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           withCredentials: true
-        })
-        .then(() => {
-          dispatch(userLogout());
-          localStorage.clear();
-          handleNotice(true);
-          handleMessage('로그아웃 성공!');
-        })
-        .catch((error) => {
-          console.log(error.response.data.message);
-        });
-      */
-    }
+        }
+      )
+      .then(() => {
+        dispatch(userLogout());
+        localStorage.clear();
+        handleNotice(true);
+        handleMessage('로그아웃 성공!');
+      })
+      .catch((error) => {
+        if (error.response.data.message === "You're not logged in") {
+          modal();
+        } else console.log(error.response.data.message);
+      });
   };
 
   return (

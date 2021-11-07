@@ -13,11 +13,10 @@ export const LoginView = styled.div`
   box-sizing: border-box;
   width: 19rem;
   height: 21rem;
-  background-color: white;
+  background-color: ${Colors.black};
   position: relative;
   text-align: center;
   padding-top: 0.7rem;
-  box-shadow: 10px 10px grey;
   .logo {
     width: 7.5rem;
     margin: 0.7rem auto 1rem;
@@ -35,14 +34,14 @@ export const LoginButton = styled.button`
   margin: 0.2rem 0.4rem 0.4rem;
   cursor: pointer;
   font-size: 0.9rem;
-  background-color: ${Colors.lightGreen};
+  background-color: ${Colors.green};
   width: 13.2rem;
   height: 2.5rem;
   border-radius: 7px;
   border: none;
   color: white;
   :hover {
-    background-color: ${Colors.green};
+    background-color: ${Colors.darkGreen};
   }
 `;
 
@@ -53,12 +52,12 @@ export const SignupSpan = styled.span`
   color: ${(props) => props.color};
   cursor: pointer;
   :hover {
-    color: ${(props) => (props.color === Colors.green ? Colors.darkGreen : Colors.darkGray)};
+    color: ${(props) => (props.color === Colors.green ? Colors.darkGreen : props.color)};
   }
 `;
 
 type LoginProp = {
-  signup: (a: boolean) => void;
+  signup: () => void;
   handleModal: () => void;
   handleMessage: (a: string) => void;
   handleNotice: (a: boolean) => void;
@@ -67,7 +66,7 @@ type LoginProp = {
 function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) {
   const dispatch = useDispatch();
   const [loginInfo, setLoginInfo] = useState({
-    id: '',
+    userId: '',
     password: ''
   });
   const [errorMsg, setErrorMsg] = useState('');
@@ -83,16 +82,9 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
   };
 
   const handleLoginRequest = () => {
-    if (loginInfo.id === '' || loginInfo.password === '') {
+    if (loginInfo.userId === '' || loginInfo.password === '') {
       setErrorMsg('모든 항목을 입력해 주세요');
     } else {
-      // JUST FOR TESTING PURPOSES
-      dispatch(userLogin('access token', loginInfo.id));
-      handleModal();
-      handleNotice(true);
-      handleMessage('로그인 성공!');
-
-      /*
       axios
         .post(`${process.env.REACT_APP_API_URL}/login`, loginInfo, {
           headers: { 'Content-Type': 'application/json' },
@@ -100,7 +92,6 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
         })
         .then((res: AxiosResponse<any>) => {
           localStorage.setItem('accessToken', res.data.accessToken);
-          localStorage.setItem('accessTokenTime', String(new Date().getTime()));
           handleModal();
           handleNotice(true);
           handleMessage('로그인 성공!');
@@ -115,8 +106,9 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
               }
             })
             .then((res: AxiosResponse<any>) => {
-              dispatch(userLogin(token, false, res.data.data));
-              localStorage.setItem('userId', JSON.stringify(res.data.data));
+              dispatch(userLogin(token, res.data.data.userId));
+              localStorage.setItem('userId', JSON.stringify(res.data.data.userId));
+              localStorage.setItem('accessTokenTime', String(new Date().getTime()));
             });
         })
         .catch((error) => {
@@ -124,12 +116,16 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
             setErrorMsg('잘못된 비밀번호입니다');
           }
           if (error.response.data.message === 'Invalid user') {
-            setErrorMsg('등록되지 않은 이메일입니다');
+            setErrorMsg('등록되지 않은 아이디입니다');
           }
           console.log(error.response.data.message);
         });
-      */
     }
+  };
+
+  const goSignup = () => {
+    handleModal();
+    signup();
   };
 
   return (
@@ -139,7 +135,7 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
         <img className="logo" src={logo} alt="logo" />
         <LoginInputContainer>
           <InputField
-            onChange={handleInputValue('id')}
+            onChange={handleInputValue('userId')}
             onKeyPress={(e) => {
               enter(e);
             }}
@@ -156,8 +152,8 @@ function Login({ signup, handleModal, handleMessage, handleNotice }: LoginProp) 
         </LoginInputContainer>
         <LoginButton onClick={handleLoginRequest}>로그인</LoginButton>
         <div>
-          <SignupSpan color={Colors.darkGray}>아직 회원이 아니신가요?</SignupSpan>
-          <SignupSpan color={Colors.green}>회원가입</SignupSpan>
+          <SignupSpan color={Colors.lightGray}>아직 회원이 아니신가요?</SignupSpan>
+          <SignupSpan color={Colors.green} onClick={goSignup}>회원가입</SignupSpan>
         </div>
         <Alertbox>{errorMsg}</Alertbox>
       </LoginView>

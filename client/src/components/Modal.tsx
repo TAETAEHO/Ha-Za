@@ -17,14 +17,14 @@ export const ModalBackdrop = styled.div`
 
 export const ModalView = styled.div`
   box-sizing: border-box;
-  background-color: white;
+  background-color: ${Colors.black};
   position: relative;
   text-align: center;
   color: ${Colors.darkGray};
+  color: white;
   width: 16.5rem;
   height: 9.5rem;
   padding-top: 1.2rem;
-  box-shadow: 10px 10px grey;
 `;
 
 export const Content = styled.div`
@@ -45,7 +45,8 @@ export const LogOutButton = styled.button`
   color: white;
   cursor: pointer;
   :hover {
-    background-color: ${Colors.black};
+    color: black;
+    background-color: ${Colors.lightGray};
   }
 `;
 

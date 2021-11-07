@@ -10,7 +10,7 @@ import { Alertbox, InputField } from '../components/UserComponents';
 export const MypageWrapper = styled.div`
   .main {
     display: flex;
-    min-height: calc(100vh - 183px);
+    min-height: calc(100vh - 137px);
   }
 `;
 
@@ -20,7 +20,6 @@ export const MypageView = styled.div`
   box-sizing: border-box;
   width: 19rem;
   height: 15rem;
-  background-color: white;
   position: relative;
   text-align: center;
 
@@ -47,8 +46,8 @@ export const MypageButton = styled.button`
   font-size: 0.85rem;
   color: white;
   :hover {
-    background-color: ${Colors.green};
-    border-color: ${Colors.green};
+    background-color: ${Colors.darkGreen};
+    border-color: ${Colors.darkGreen};
   }
   &:last-of-type {
     border: 2px solid ${Colors.gray};
@@ -57,8 +56,9 @@ export const MypageButton = styled.button`
   }
   &:last-of-type:hover {
     background-color: white;
-    border-color: ${Colors.black};
-    background-color: ${Colors.black};
+    color: black;
+    border-color: ${Colors.lightGray};
+    background-color: ${Colors.lightGray};
   }
 `;
 
@@ -71,7 +71,6 @@ type MypageProp = {
 const Mypage = ({ modal, handleMessage, handleNotice }: MypageProp) => {
   const token = useSelector((state: RootState) => state.user).token;
   const userID = useSelector((state: RootState) => state.user).userID;
-  const isExpired = useSelector((state: RootState) => state.user).isExpired;
 
   const [checkPassword, setCheckPassword] = useState(false);
   const [checkRetypePassword, setCheckRetypePassword] = useState(false);
@@ -110,20 +109,13 @@ const Mypage = ({ modal, handleMessage, handleNotice }: MypageProp) => {
   };
 
   const handleEditRequest = () => {
-    if (isExpired) {
-      modal();
-    } else if (userInfo.password === '') {
+    if (userInfo.password === '') {
       setErrorMsg('수정할 비밀번호를 입력해주세요');
     } else if (checkPassword !== true) {
       setErrorMsg('비밀번호 형식을 확인해주세요');
     } else if (checkRetypePassword !== true) {
       setErrorMsg('비밀번호가 일치하지 않습니다');
     } else {
-      // JUST FOR TESTING PURPOSES
-      handleNotice(true);
-      handleMessage('비밀번호가 수정되었습니다.');
-     
-      /*
       axios
         .patch(process.env.REACT_APP_API_URL + '/user-info', userInfo, {
           headers: {
@@ -139,19 +131,16 @@ const Mypage = ({ modal, handleMessage, handleNotice }: MypageProp) => {
           }
         })
         .catch((error) => {
-          console.log(error.response.data.message);
+          if (error.response.data.message === "You're not logged in") {
+            modal();
+          } else console.log(error.response.data.message);
         });
-      */
     }
   };
 
   const handleWithdrawalRequest = () => {
-    if (isExpired) {
-      modal();
-    } else {
-      handleNotice(true);
-      handleMessage('정말 탈퇴하시겠습니까?');
-    }
+    handleNotice(true);
+    handleMessage('정말 탈퇴하시겠습니까?');
   };
 
   return (
@@ -167,7 +156,7 @@ const Mypage = ({ modal, handleMessage, handleNotice }: MypageProp) => {
               placeholder="비밀번호 재확인"
             />
           </MypageInputContainer>
-          <MypageButton onClick={handleEditRequest} color={Colors.lightGreen}>
+          <MypageButton onClick={handleEditRequest} color={Colors.green}>
             정보수정
           </MypageButton>
           <MypageButton onClick={handleWithdrawalRequest} color={Colors.darkGray}>
