@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "pm2:start": "pm2 start src/index.ts",
-    "pm2:stop": "pm2 stop src/index.ts",
+    "pm2:start": "authbind --deep pm2 start index.js",
+    "pm2:stop": "authbind --deep pm2 stop index.js",
     "sq:migrate": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
