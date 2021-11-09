@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { users } = require('../../models');
-const { isAuthorized, generateAccessToken, generateRefreshToken } = require('../tokenFunctions');
+const { isAuthorized } = require('../tokenFunctions');
 
 module.exports = async (req, res) => {
   try {

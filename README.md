@@ -1,4 +1,14 @@
-# Ha-Za
+# Ha-Za (하자)
+<br/>
+<img width="150" alt="logo" src="https://user-images.githubusercontent.com/29108753/140607654-a391f088-7fa2-4ceb-a09d-1d312d7a6e0e.png">
+
+### **Ha-Za와 함께 하자!**
+
+하자는 칸반 시스템에서 영감을 받은 할 일 관리 서비스입니다.  
+하자와 함께하는 일정 관리, 지금 바로 시작해보세요~!
+
+⇒ **<i>[Ha-Za 배포 링크]()</i>**
+<br/>
 
 # Team
 
